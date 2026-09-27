@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyForm – Online Form Filling Portal</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Demo Top Bar (Quick Role Switching & Session Status) -->
+  <div class="demo-topbar">
+    <div class="container">
+      <div>
+        <i class="fa-solid fa-shield-halved" style="color: #38bdf8;"></i>
+        <span>Official Digital Form Filling Portal • ISO 27001 Secure Data Encryption</span>
+      </div>
+      <div class="demo-badge-group">
+        <span><i class="fa-solid fa-headset"></i> Support: 1800-111-2233</span>
+        <span>|</span>
+        <label for="demoRoleSelect" style="color: #94a3b8; font-size: 0.78rem;">Current Role:</label>
+        <select id="demoRoleSelect" class="quick-role-select" title="Switch user role for testing">
+          <option value="applicant">Applicant (Rahul)</option>
+          <option value="admin">Admin Panel</option>
+          <option value="guest">Guest</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <!-- Brand Logo -->
+      <a href="#home" class="brand-logo" onclick="switchView('home-view')">
+        <div class="logo-icon">
+          <i class="fa-solid fa-file-signature"></i>
+        </div>
+        <span>Easy<span class="accent">Form</span></span>
+      </a>
+
+      <!-- Desktop & Mobile Navigation Links -->
+      <nav class="nav-menu" id="navMenu">
+        <a href="#home" class="nav-link active" data-target-view="home-view" onclick="switchView('home-view')">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a href="#forms" class="nav-link" onclick="switchView('home-view'); setTimeout(() => document.getElementById('available-forms-section').scrollIntoView({behavior:'smooth'}), 100);">
+          <i class="fa-solid fa-layer-group"></i> Available Forms
+        </a>
+        <a href="#how-it-works" class="nav-link" onclick="switchView('home-view'); setTimeout(() => document.getElementById('how-it-works-section').scrollIntoView({behavior:'smooth'}), 100);">
+          <i class="fa-solid fa-list-check"></i> How It Works
+        </a>
+        <a href="#dashboard" class="nav-link" data-target-view="user-dashboard-view" onclick="switchView('user-dashboard-view')">
+          <i class="fa-solid fa-gauge-high"></i> My Dashboard
+        </a>
+        <a href="#admin" class="nav-link admin-only-link hidden" data-target-view="admin-dashboard-view" onclick="switchView('admin-dashboard-view')">
+          <i class="fa-solid fa-user-shield"></i> Admin Portal
+        </a>
+        <a href="#faq" class="nav-link" onclick="switchView('home-view'); setTimeout(() => document.getElementById('faq-section').scrollIntoView({behavior:'smooth'}), 100);">
+          <i class="fa-solid fa-circle-question"></i> Help & FAQ
+        </a>
+      </nav>
+
+      <!-- Nav Actions (Login / User Profile) -->
+      <div class="nav-actions">
+        <button type="button" class="btn btn-outline btn-sm" id="navLoginBtn" onclick="openModal('authModal')">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Login / Sign Up
+        </button>
+
+        <!-- User Avatar Menu -->
+        <div class="user-profile-menu">
+          <button type="button" class="user-avatar-btn" id="userAvatarBtn" aria-label="User Menu">
+            <div class="user-avatar-circle" id="userAvatarInitials">RS</div>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-subtle);"></i>
+          </button>
+
+          <!-- Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-user-name" id="dropdownUserName">Rahul Sharma</div>
+              <div class="dropdown-user-role" id="dropdownUserRole">APPLICANT</div>
+            </div>
+            <a class="dropdown-item" onclick="switchView('user-dashboard-view')">
+              <i class="fa-regular fa-folder-open"></i> My Applications
+            </a>
+            <a class="dropdown-item admin-only-link hidden" onclick="switchView('admin-dashboard-view')">
+              <i class="fa-solid fa-user-shield"></i> Admin Dashboard
+            </a>
+            <a class="dropdown-item" onclick="openModal('authModal')">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Switch / Login
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item text-danger" onclick="logoutUser()">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Toggle Button -->
+        <button class="mobile-toggle-btn" id="mobileToggleBtn" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       VIEW 1: HOMEPAGE VIEW
+       ========================================== -->
+  <main id="home-view" class="page-view active-view">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <i class="fa-solid fa-shield-check"></i> Government & Corporate Certified Portal
+          </div>
+          <h1 class="hero-title">
+            Fill Your Forms <span class="gradient-text">Easily &amp; Securely</span>
+          </h1>
+          <p class="hero-desc">
+            The all-in-one digital application portal. Easily fill job applications, college admissions, scholarship requests, and government schemes in minutes with guided validation and instant tracking.
+          </p>
+          <div class="hero-cta-group">
+            <button class="btn btn-primary btn-lg" onclick="startFillingForm('job')">
+              <i class="fa-solid fa-pencil"></i> Start Filling Form
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="document.getElementById('available-forms-section').scrollIntoView({behavior:'smooth'})">
+              <i class="fa-solid fa-table-cells"></i> View Available Forms
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <h4>250,000+</h4>
+              <p>Forms Processed</p>
+            </div>
+            <div class="stat-item">
+              <h4>99.8%</h4>
+              <p>Submission Rate</p>
+            </div>
+            <div class="stat-item">
+              <h4>24/7</h4>
+              <p>Real-Time Tracking</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual Illustration Preview -->
+        <div class="hero-visual">
+          <div class="floating-pill pill-1">
+            <i class="fa-solid fa-circle-check" style="color: var(--success); font-size: 1.1rem;"></i>
+            <span>Instant Validation Passed</span>
+          </div>
+
+          <div class="hero-card-preview">
+            <div class="preview-header">
+              <div>
+                <strong style="color: var(--secondary); font-size: 0.95rem;">Application Progress</strong>
+                <p style="font-size: 0.78rem; color: var(--text-muted);">EF-2026-89104 • Central Portal</p>
+              </div>
+              <span class="preview-status"><i class="fa-solid fa-lock"></i> 256-Bit Encrypted</span>
+            </div>
+
+            <div class="preview-field">
+              <div class="preview-label">Form Category</div>
+              <div class="preview-value-box">
+                <span>Job Application Form</span>
+                <i class="fa-solid fa-briefcase" style="color: var(--primary);"></i>
+              </div>
+            </div>
+
+            <div class="preview-field">
+              <div class="preview-label">Applicant Verified ID</div>
+              <div class="preview-value-box">
+                <span>Rahul Sharma (•••• 4321)</span>
+                <i class="fa-solid fa-badge-check" style="color: var(--success);"></i>
+              </div>
+            </div>
+
+            <div class="preview-field">
+              <div class="preview-label">Attached Documents</div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <span class="preview-doc-chip"><i class="fa-solid fa-id-card"></i> Aadhaar.pdf</span>
+                <span class="preview-doc-chip"><i class="fa-solid fa-graduation-cap"></i> Degree.pdf</span>
+                <span class="preview-doc-chip"><i class="fa-solid fa-image"></i> Photo.jpg</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 1.25rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.4rem;">
+                <span style="font-weight: 600;">Completion Status</span>
+                <span style="color: var(--success); font-weight: 700;">Ready to Submit (100%)</span>
+              </div>
+              <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                <div style="width: 100%; height: 100%; background: var(--success);"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="floating-pill pill-2">
+            <i class="fa-solid fa-file-arrow-up" style="color: var(--primary); font-size: 1.1rem;"></i>
+            <span>4 Documents Verified</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Features Section (Easy to Use, Secure Data, Fast Submission, Mobile Friendly) -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Why Choose EasyForm</span>
+          <h2 class="section-title">Designed for Fast, Stress-Free Form Filling</h2>
+          <p class="section-subtitle">No more complex government portals or confusing paperwork. Everything you need is simplified into a guided experience.</p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Easy to Use -->
+          <div class="feature-card">
+            <div class="feature-icon-box blue">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h3 class="feature-title">Easy to Use</h3>
+            <p class="feature-text">
+              Step-by-step guided wizard with helpful prompts, clear labels, and instant error explanations so you never get stuck.
+            </p>
+          </div>
+
+          <!-- Secure Data -->
+          <div class="feature-card">
+            <div class="feature-icon-box emerald">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h3 class="feature-title">Secure Data</h3>
+            <p class="feature-text">
+              Bank-grade 256-bit encryption for all personal identifiers, academic marksheets, and identity proof documents.
+            </p>
+          </div>
+
+          <!-- Fast Submission -->
+          <div class="feature-card">
+            <div class="feature-icon-box amber">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <h3 class="feature-title">Fast Submission</h3>
+            <p class="feature-text">
+              Submit your forms in under 5 minutes with auto-saving, pre-filled address profiles, and instant acknowledgement slips.
+            </p>
+          </div>
+
+          <!-- Mobile Friendly -->
+          <div class="feature-card">
+            <div class="feature-icon-box purple">
+              <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+            <h3 class="feature-title">Mobile Friendly</h3>
+            <p class="feature-text">
+              Completely responsive interface engineered to work seamlessly on smartphones, tablets, and desktop workstations.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Available Forms Section -->
+    <section class="forms-section" id="available-forms-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Form Directory</span>
+          <h2 class="section-title">Choose from Available Online Forms</h2>
+          <p class="section-subtitle">Select any form below to begin your online application with step-by-step assistance.</p>
+        </div>
+
+        <!-- Search & Category Filters -->
+        <div class="forms-controls-bar">
+          <div class="forms-search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="formsCategorySearch" placeholder="Search forms by name or keyword..." aria-label="Search forms">
+          </div>
+
+          <div class="forms-categories-filter">
+            <button class="cat-filter-btn active" data-category="ALL">All Forms</button>
+            <button class="cat-filter-btn" data-category="Employment">Jobs</button>
+            <button class="cat-filter-btn" data-category="Higher Education">Admissions</button>
+            <button class="cat-filter-btn" data-category="Financial Aid">Scholarships</button>
+            <button class="cat-filter-btn" data-category="Citizen Welfare">Govt Schemes</button>
+          </div>
+        </div>
+
+        <!-- 7 Available Form Cards Grid -->
+        <div class="forms-grid" id="formsGrid">
+          <!-- Dynamically Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section" id="how-it-works-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Simple 4-Step Process</span>
+          <h2 class="section-title">How EasyForm Works</h2>
+          <p class="section-subtitle">From form selection to official receipt generation in four effortless steps.</p>
+        </div>
+
+        <div class="steps-timeline">
+          <!-- Step 1 -->
+          <div class="timeline-step-card">
+            <div class="step-number-bubble">1</div>
+            <h4>Select Your Form</h4>
+            <p>Pick from job vacancies, admission tests, scholarships, or citizen benefit schemes.</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="timeline-step-card">
+            <div class="step-number-bubble">2</div>
+            <h4>Fill Your Details</h4>
+            <p>Provide personal, contact, and educational information with live error validation.</p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="timeline-step-card">
+            <div class="step-number-bubble">3</div>
+            <h4>Upload Documents</h4>
+            <p>Drag &amp; drop your passport photo, signature, ID proof, and marksheets with preview.</p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="timeline-step-card">
+            <div class="step-number-bubble">4</div>
+            <h4>Review &amp; Submit</h4>
+            <p>Verify summary, submit securely, and download your official printable application slip.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section class="faq-section" id="faq-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Frequently Asked Questions</span>
+          <h2 class="section-title">Got Questions? We’ve Got Answers</h2>
+          <p class="section-subtitle">Find quick answers to common questions about filling and submitting forms on EasyForm.</p>
+        </div>
+
+        <div class="faq-list">
+          <!-- Q1 -->
+          <div class="faq-item open">
+            <div class="faq-question">
+              <span>What documents are required to fill out a form?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Typically, you will need a clear passport-size photograph (JPG/PNG, up to 2MB), a digital specimen signature (up to 1MB), an ID proof such as Aadhaar Card or Passport (PDF/JPG, up to 3MB), and your relevant educational marksheet or certificate.
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do I track my submitted application status?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Once you submit an application, you are issued a unique Reference Number (e.g. EF-2026-89104). You can track your real-time status (Draft, Submitted, Under Review, Approved, or Rejected) anytime by navigating to "My Dashboard".
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Can I save my form and continue filling it later?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Yes! At Step 5 (Review &amp; Submit) or during the form, you can click "Save as Draft". Your form will be stored in your dashboard where you can resume or edit whenever you are ready.
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>What if I uploaded the wrong document or missed one?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              You can navigate to "My Dashboard" &gt; "Upload Missing Documents", select your application, and attach additional files. The reviewing administrator will be notified automatically.
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do I print or download my official acknowledgement slip?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Immediately upon submission, or from your User Dashboard at any time, click the "Download / Print Application" button. This generates a standardized printable slip with all details, photo, and digital signature.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       VIEW 2: FORM FILLING PAGE (MULTI-STEP WIZARD)
+       ========================================== -->
+  <main id="form-view" class="page-view form-portal-view">
+    <div class="container">
+      <div class="form-wizard-card">
+        <!-- Form Header Banner -->
+        <div class="wizard-header-banner">
+          <div>
+            <h2 id="activeFormTitle">Job Application Form</h2>
+            <p>Complete all 5 steps accurately. Required fields are marked with an asterisk (<span class="text-danger">*</span>).</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="active-form-tag" id="activeFormTag">Employment</span>
+            <button class="btn btn-secondary btn-sm" onclick="switchView('home-view')">
+              <i class="fa-solid fa-arrow-left"></i> Change Form
+            </button>
+          </div>
+        </div>
+
+        <!-- Wizard Progress Bar & Step Dots -->
+        <div class="wizard-steps-container">
+          <div class="wizard-steps-list">
+            <div class="wizard-progress-bar-fill" id="wizardProgressFill"></div>
+
+            <li class="wizard-step-node active" id="step-node-1">
+              <div class="step-dot">1</div>
+              <span class="step-title">Personal Info</span>
+            </li>
+
+            <li class="wizard-step-node" id="step-node-2">
+              <div class="step-dot">2</div>
+              <span class="step-title">Address</span>
+            </li>
+
+            <li class="wizard-step-node" id="step-node-3">
+              <div class="step-dot">3</div>
+              <span class="step-title">Education</span>
+            </li>
+
+            <li class="wizard-step-node" id="step-node-4">
+              <div class="step-dot">4</div>
+              <span class="step-title">Documents</span>
+            </li>
+
+            <li class="wizard-step-node" id="step-node-5">
+              <div class="step-dot">5</div>
+              <span class="step-title">Review &amp; Submit</span>
+            </li>
+          </div>
+        </div>
+
+        <!-- Form Step Content Panes -->
+        <div class="wizard-body">
+          <form id="multiStepForm" onsubmit="return false;" novalidate>
+            <!-- ================= STEP 1: PERSONAL INFORMATION ================= -->
+            <div class="wizard-step-pane active-pane" id="step-pane-1">
+              <div class="step-pane-header">
+                <h3>Step 1: Personal Information</h3>
+                <p>Provide your basic identity details exactly as recorded in official government IDs.</p>
+              </div>
+
+              <div class="form-grid-2">
+                <!-- Full Name -->
+                <div class="form-group">
+                  <label for="fullName">Full Name <span class="required">*</span></label>
+                  <input type="text" id="fullName" placeholder="e.g. Rahul Sharma" autocomplete="name" required>
+                  <div class="error-text hidden"></div>
+                  <div class="form-hint">Enter your full name as per 10th marksheet or Aadhaar</div>
+                </div>
+
+                <!-- Father's Name -->
+                <div class="form-group">
+                  <label for="fatherName">Father's Name <span class="required">*</span></label>
+                  <input type="text" id="fatherName" placeholder="e.g. Mahesh Sharma" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Mother's Name -->
+                <div class="form-group">
+                  <label for="motherName">Mother's Name <span class="required">*</span></label>
+                  <input type="text" id="motherName" placeholder="e.g. Sunita Sharma" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="form-group">
+                  <label for="dob">Date of Birth <span class="required">*</span></label>
+                  <input type="date" id="dob" required>
+                  <div class="error-text hidden"></div>
+                  <div class="form-hint">Must be at least 12 years of age</div>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                  <label for="gender">Gender <span class="required">*</span></label>
+                  <select id="gender" required>
+                    <option value="">-- Select Gender --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="form-group">
+                  <label for="mobile">Mobile Number <span class="required">*</span></label>
+                  <input type="tel" id="mobile" placeholder="10-digit mobile number (e.g. 9876543210)" maxlength="10" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group">
+                  <label for="email">Email Address <span class="required">*</span></label>
+                  <input type="email" id="email" placeholder="e.g. rahul.sharma@example.com" autocomplete="email" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Aadhaar / ID Number -->
+                <div class="form-group">
+                  <label for="idNumber">Aadhaar / National ID Number <span class="required">*</span></label>
+                  <input type="text" id="idNumber" placeholder="12-digit Aadhaar / ID number" maxlength="16" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group form-group-full">
+                  <label for="category">Category <span class="required">*</span></label>
+                  <select id="category" required>
+                    <option value="">-- Select Reservation / Social Category --</option>
+                    <option value="General">General / Unreserved (UR)</option>
+                    <option value="OBC">Other Backward Classes (OBC-NCL)</option>
+                    <option value="SC">Scheduled Caste (SC)</option>
+                    <option value="ST">Scheduled Tribe (ST)</option>
+                    <option value="EWS">Economically Weaker Section (EWS)</option>
+                  </select>
+                  <div class="error-text hidden"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================= STEP 2: ADDRESS INFORMATION ================= -->
+            <div class="wizard-step-pane" id="step-pane-2">
+              <div class="step-pane-header">
+                <h3>Step 2: Address Information</h3>
+                <p>Enter your residential communication and permanent domicile address.</p>
+              </div>
+
+              <div class="form-grid-2">
+                <!-- House / Street Address -->
+                <div class="form-group form-group-full">
+                  <label for="address">House / Flat / Street Address <span class="required">*</span></label>
+                  <textarea id="address" rows="2" placeholder="e.g. Flat 402, Sunshine Heights, MG Road, Near City Mall" required></textarea>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- City -->
+                <div class="form-group">
+                  <label for="city">City / Town / Village <span class="required">*</span></label>
+                  <input type="text" id="city" placeholder="e.g. Bengaluru" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- District -->
+                <div class="form-group">
+                  <label for="district">District <span class="required">*</span></label>
+                  <input type="text" id="district" placeholder="e.g. Bengaluru Urban" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- State -->
+                <div class="form-group">
+                  <label for="state">State / Union Territory <span class="required">*</span></label>
+                  <select id="state" required>
+                    <option value="">-- Select State --</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="West Bengal">West Bengal</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Country -->
+                <div class="form-group">
+                  <label for="country">Country <span class="required">*</span></label>
+                  <select id="country" required>
+                    <option value="India" selected>India</option>
+                    <option value="Nepal">Nepal</option>
+                    <option value="Bhutan">Bhutan</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- PIN Code -->
+                <div class="form-group">
+                  <label for="pincode">PIN / Postal Code <span class="required">*</span></label>
+                  <input type="text" id="pincode" placeholder="6-digit postal code (e.g. 560001)" maxlength="6" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <div class="form-group form-group-full">
+                  <label class="declaration-label" style="margin-top: 0.5rem;">
+                    <input type="checkbox" id="sameAddressCheckbox">
+                    <span style="font-size: 0.88rem; color: var(--text-muted);">
+                      Permanent address is the same as correspondence address.
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================= STEP 3: EDUCATION DETAILS ================= -->
+            <div class="wizard-step-pane" id="step-pane-3">
+              <div class="step-pane-header">
+                <h3>Step 3: Educational Qualifications</h3>
+                <p>Provide details of your highest completed or appearing qualification.</p>
+              </div>
+
+              <div class="form-grid-2">
+                <!-- Highest Qualification -->
+                <div class="form-group form-group-full">
+                  <label for="qualification">Highest Qualification <span class="required">*</span></label>
+                  <select id="qualification" required>
+                    <option value="">-- Select Highest Qualification --</option>
+                    <option value="Secondary (10th)">Secondary School Examination (10th Standard)</option>
+                    <option value="Higher Secondary (12th)">Higher Secondary / Intermediate (12th Standard)</option>
+                    <option value="Diploma">Diploma / Polytechnic</option>
+                    <option value="Bachelor's Degree">Bachelor's Degree (B.Tech, B.Sc, B.Com, B.A, etc.)</option>
+                    <option value="Master's Degree">Master's Degree (M.Tech, M.Sc, M.Com, MBA, etc.)</option>
+                    <option value="Doctorate (Ph.D)">Doctorate (Ph.D / Post-Doctoral)</option>
+                  </select>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- School / College Name -->
+                <div class="form-group">
+                  <label for="institution">School / College / Institute Name <span class="required">*</span></label>
+                  <input type="text" id="institution" placeholder="e.g. National Institute of Technology" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Board / University -->
+                <div class="form-group">
+                  <label for="university">Board / University Name <span class="required">*</span></label>
+                  <input type="text" id="university" placeholder="e.g. CBSE / State Board / University of Delhi" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Passing Year -->
+                <div class="form-group">
+                  <label for="passingYear">Passing Year <span class="required">*</span></label>
+                  <input type="number" id="passingYear" placeholder="e.g. 2022" min="1980" max="2026" required>
+                  <div class="error-text hidden"></div>
+                </div>
+
+                <!-- Percentage / CGPA -->
+                <div class="form-group">
+                  <label for="percentage">Percentage / CGPA <span class="required">*</span></label>
+                  <input type="number" id="percentage" step="0.01" placeholder="e.g. 84.50" min="0" max="100" required>
+                  <div class="error-text hidden"></div>
+                  <div class="form-hint">For CGPA (scale of 10), convert or enter percentage equivalent</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================= STEP 4: DOCUMENT UPLOAD ================= -->
+            <div class="wizard-step-pane" id="step-pane-4">
+              <div class="step-pane-header">
+                <h3>Step 4: Document Upload</h3>
+                <p>Upload clear, legible digital copies. Maximum limits and accepted file formats are mentioned for each.</p>
+              </div>
+
+              <div class="docs-upload-container">
+                <!-- 1. Passport Size Photo -->
+                <div class="doc-upload-card">
+                  <div class="doc-info-bar">
+                    <div class="doc-title-box">
+                      <div class="doc-icon-badge"><i class="fa-solid fa-camera"></i></div>
+                      <div>
+                        <div class="doc-title">Passport Size Photo <span class="text-danger">*</span></div>
+                        <div class="doc-limits">Allowed: JPG, PNG • Max size: 2 MB</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropzone" id="dropzonePhoto">
+                    <input type="file" id="docPhotoInput" accept="image/jpeg,image/png">
+                    <div class="dropzone-prompt">
+                      <i class="fa-solid fa-cloud-arrow-up"></i>
+                      <p>Click to browse or drag &amp; drop photo here</p>
+                      <span>Recommended dimension: 3.5cm x 4.5cm</span>
+                    </div>
+                  </div>
+                  <!-- Preview Row -->
+                  <div class="uploaded-preview-row hidden" id="previewPhotoRow">
+                    <div class="preview-file-left">
+                      <img src="" class="file-thumb" alt="Photo Preview">
+                      <div class="file-details-text">
+                        <div class="file-name">photo.jpg</div>
+                        <div class="file-meta-sub">240 KB</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="file-status-badge"><i class="fa-solid fa-check"></i> Uploaded</span>
+                      <button type="button" class="remove-file-btn" onclick="removeDoc('photo', 'previewPhotoRow', 'docPhotoInput')">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. Signature -->
+                <div class="doc-upload-card">
+                  <div class="doc-info-bar">
+                    <div class="doc-title-box">
+                      <div class="doc-icon-badge"><i class="fa-solid fa-signature"></i></div>
+                      <div>
+                        <div class="doc-title">Specimen Signature <span class="text-danger">*</span></div>
+                        <div class="doc-limits">Allowed: JPG, PNG • Max size: 1 MB</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropzone" id="dropzoneSign">
+                    <input type="file" id="docSignInput" accept="image/jpeg,image/png">
+                    <div class="dropzone-prompt">
+                      <i class="fa-solid fa-cloud-arrow-up"></i>
+                      <p>Click or drag signature image on white paper</p>
+                      <span>Blue or black ink only</span>
+                    </div>
+                  </div>
+                  <!-- Preview Row -->
+                  <div class="uploaded-preview-row hidden" id="previewSignRow">
+                    <div class="preview-file-left">
+                      <img src="" class="file-thumb" alt="Signature Preview">
+                      <div class="file-details-text">
+                        <div class="file-name">signature.png</div>
+                        <div class="file-meta-sub">85 KB</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="file-status-badge"><i class="fa-solid fa-check"></i> Uploaded</span>
+                      <button type="button" class="remove-file-btn" onclick="removeDoc('signature', 'previewSignRow', 'docSignInput')">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. ID Proof -->
+                <div class="doc-upload-card">
+                  <div class="doc-info-bar">
+                    <div class="doc-title-box">
+                      <div class="doc-icon-badge"><i class="fa-solid fa-id-card"></i></div>
+                      <div>
+                        <div class="doc-title">National ID Proof (Aadhaar / PAN / Passport) <span class="text-danger">*</span></div>
+                        <div class="doc-limits">Allowed: PDF, JPG, PNG • Max size: 3 MB</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropzone" id="dropzoneId">
+                    <input type="file" id="docIdInput" accept=".pdf,image/jpeg,image/png">
+                    <div class="dropzone-prompt">
+                      <i class="fa-solid fa-cloud-arrow-up"></i>
+                      <p>Click or drag your ID document here</p>
+                      <span>Both front &amp; back sides preferred</span>
+                    </div>
+                  </div>
+                  <!-- Preview Row -->
+                  <div class="uploaded-preview-row hidden" id="previewIdRow">
+                    <div class="preview-file-left">
+                      <img src="" class="file-thumb" alt="ID Preview">
+                      <div class="file-details-text">
+                        <div class="file-name">aadhaar_proof.pdf</div>
+                        <div class="file-meta-sub">1.2 MB</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="file-status-badge"><i class="fa-solid fa-check"></i> Uploaded</span>
+                      <button type="button" class="remove-file-btn" onclick="removeDoc('idProof', 'previewIdRow', 'docIdInput')">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4. Marksheet -->
+                <div class="doc-upload-card">
+                  <div class="doc-info-bar">
+                    <div class="doc-title-box">
+                      <div class="doc-icon-badge"><i class="fa-solid fa-file-lines"></i></div>
+                      <div>
+                        <div class="doc-title">Academic Marksheet / Certificate <span class="text-danger">*</span></div>
+                        <div class="doc-limits">Allowed: PDF, JPG, PNG • Max size: 5 MB</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropzone" id="dropzoneMarksheet">
+                    <input type="file" id="docMarksheetInput" accept=".pdf,image/jpeg,image/png">
+                    <div class="dropzone-prompt">
+                      <i class="fa-solid fa-cloud-arrow-up"></i>
+                      <p>Click or drag your academic marksheet / degree</p>
+                      <span>Must show marks and roll number clearly</span>
+                    </div>
+                  </div>
+                  <!-- Preview Row -->
+                  <div class="uploaded-preview-row hidden" id="previewMarksheetRow">
+                    <div class="preview-file-left">
+                      <img src="" class="file-thumb" alt="Marksheet Preview">
+                      <div class="file-details-text">
+                        <div class="file-name">degree_certificate.pdf</div>
+                        <div class="file-meta-sub">2.1 MB</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="file-status-badge"><i class="fa-solid fa-check"></i> Uploaded</span>
+                      <button type="button" class="remove-file-btn" onclick="removeDoc('marksheet', 'previewMarksheetRow', 'docMarksheetInput')">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 5. Other Supporting Documents (Optional) -->
+                <div class="doc-upload-card">
+                  <div class="doc-info-bar">
+                    <div class="doc-title-box">
+                      <div class="doc-icon-badge"><i class="fa-solid fa-paperclip"></i></div>
+                      <div>
+                        <div class="doc-title">Other Supporting Documents (Income / Caste / Experience)</div>
+                        <div class="doc-limits">Optional • Allowed: PDF, JPG, PNG • Max size: 5 MB</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropzone" id="dropzoneOther">
+                    <input type="file" id="docOtherInput" accept=".pdf,image/jpeg,image/png">
+                    <div class="dropzone-prompt">
+                      <i class="fa-solid fa-cloud-arrow-up"></i>
+                      <p>Click or drag any supporting certificates</p>
+                      <span>Income certificate, caste validity, or experience letter</span>
+                    </div>
+                  </div>
+                  <!-- Preview Row -->
+                  <div class="uploaded-preview-row hidden" id="previewOtherRow">
+                    <div class="preview-file-left">
+                      <img src="" class="file-thumb" alt="Doc Preview">
+                      <div class="file-details-text">
+                        <div class="file-name">certificate.pdf</div>
+                        <div class="file-meta-sub">800 KB</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="file-status-badge"><i class="fa-solid fa-check"></i> Uploaded</span>
+                      <button type="button" class="remove-file-btn" onclick="removeDoc('otherDoc', 'previewOtherRow', 'docOtherInput')">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================= STEP 5: REVIEW & SUBMIT ================= -->
+            <div class="wizard-step-pane" id="step-pane-5">
+              <div class="step-pane-header">
+                <h3>Step 5: Review &amp; Submit Application</h3>
+                <p>Carefully verify all the information entered before final submission. Click "Edit" on any section to make corrections.</p>
+              </div>
+
+              <!-- Form Type Header -->
+              <div style="background: var(--primary-light); padding: 0.85rem 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--primary); font-weight: 700;">Selected Form</span>
+                  <div style="font-size: 1.15rem; font-weight: 800; color: var(--secondary);" id="revFormType">Job Application Form</div>
+                </div>
+                <span class="status-pill status-submitted">Step 5 of 5</span>
+              </div>
+
+              <!-- Personal Information Review Card -->
+              <div class="review-summary-block">
+                <div class="review-header">
+                  <h4><i class="fa-regular fa-user" style="color: var(--primary); margin-right: 0.4rem;"></i> Personal Information</h4>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="goToStep(1)">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                  </button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-cell">
+                    <div class="review-cell-label">Full Name</div>
+                    <div class="review-cell-value" id="revFullName">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Father's Name</div>
+                    <div class="review-cell-value" id="revFatherName">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Mother's Name</div>
+                    <div class="review-cell-value" id="revMotherName">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Date of Birth</div>
+                    <div class="review-cell-value" id="revDob">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Gender</div>
+                    <div class="review-cell-value" id="revGender">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Category</div>
+                    <div class="review-cell-value" id="revCategory">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Mobile Number</div>
+                    <div class="review-cell-value" id="revMobile">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Email Address</div>
+                    <div class="review-cell-value" id="revEmail">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">ID Number</div>
+                    <div class="review-cell-value" id="revIdNumber">—</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Address Details Review Card -->
+              <div class="review-summary-block">
+                <div class="review-header">
+                  <h4><i class="fa-regular fa-map" style="color: var(--primary); margin-right: 0.4rem;"></i> Address Information</h4>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="goToStep(2)">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                  </button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-cell" style="grid-column: 1 / -1;">
+                    <div class="review-cell-label">Street Address</div>
+                    <div class="review-cell-value" id="revAddress">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">City</div>
+                    <div class="review-cell-value" id="revCity">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">District</div>
+                    <div class="review-cell-value" id="revDistrict">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">State</div>
+                    <div class="review-cell-value" id="revState">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Country</div>
+                    <div class="review-cell-value" id="revCountry">India</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Postal PIN Code</div>
+                    <div class="review-cell-value" id="revPincode">—</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Education Review Card -->
+              <div class="review-summary-block">
+                <div class="review-header">
+                  <h4><i class="fa-solid fa-graduation-cap" style="color: var(--primary); margin-right: 0.4rem;"></i> Education Details</h4>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="goToStep(3)">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                  </button>
+                </div>
+                <div class="review-grid">
+                  <div class="review-cell">
+                    <div class="review-cell-label">Highest Qualification</div>
+                    <div class="review-cell-value" id="revQualification">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">School / College Name</div>
+                    <div class="review-cell-value" id="revInstitution">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Board / University</div>
+                    <div class="review-cell-value" id="revUniversity">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Passing Year</div>
+                    <div class="review-cell-value" id="revPassingYear">—</div>
+                  </div>
+                  <div class="review-cell">
+                    <div class="review-cell-label">Percentage / CGPA</div>
+                    <div class="review-cell-value" id="revPercentage">—</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Uploaded Documents Review Card -->
+              <div class="review-summary-block">
+                <div class="review-header">
+                  <h4><i class="fa-solid fa-paperclip" style="color: var(--primary); margin-right: 0.4rem;"></i> Uploaded Documents</h4>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="goToStep(4)">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                  </button>
+                </div>
+                <div id="revDocsList" style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                  <!-- Filled via JS -->
+                </div>
+              </div>
+
+              <!-- Mandatory Confirmation Declaration Checkbox -->
+              <div class="declaration-box">
+                <label class="declaration-label" for="confirmDeclaration">
+                  <input type="checkbox" id="confirmDeclaration" required>
+                  <span class="declaration-text">
+                    <strong>I confirm that all information provided by me is correct</strong>, authentic, and complete to the best of my knowledge. I understand that any false or misleading statements will result in automatic rejection of my application and potential legal proceedings.
+                  </span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Wizard Navigation Footer -->
+        <div class="wizard-footer-nav">
+          <div>
+            <button type="button" class="btn btn-secondary" id="prevStepBtn" style="visibility: hidden;">
+              <i class="fa-solid fa-arrow-left"></i> Previous
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" class="btn btn-secondary" onclick="saveDraftApplication()">
+              <i class="fa-regular fa-floppy-disk"></i> Save as Draft
+            </button>
+
+            <button type="button" class="btn btn-primary" id="nextStepBtn">
+              Next Step <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <button type="button" class="btn btn-success hidden" id="submitFormBtn">
+              <i class="fa-solid fa-paper-plane"></i> Submit Form
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       VIEW 3: SUCCESS PAGE VIEW
+       ========================================== -->
+  <main id="success-view" class="page-view" style="padding: 2rem 0 5rem;">
+    <div class="container">
+      <div class="success-card">
+        <!-- Green Success Animated Bubble -->
+        <div class="success-check-bubble">
+          <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h2 class="success-title">Form Submitted Successfully!</h2>
+        <p class="success-subtitle">
+          Your application has been securely transmitted and recorded in the portal database.
+        </p>
+
+        <!-- Reference Box with Copy Button -->
+        <div class="success-ref-box">
+          <div class="ref-label">Application Reference Number</div>
+          <div class="ref-number" id="successRefNumber">EF-2026-89104</div>
+          <button type="button" class="ref-copy-btn" onclick="copyRefNumber()">
+            <i class="fa-regular fa-copy"></i> Click to Copy Reference ID
+          </button>
+        </div>
+
+        <!-- Submission Summary Snapshot -->
+        <div class="success-details-summary">
+          <div class="row">
+            <span class="text-muted">Applicant Name</span>
+            <strong id="successApplicantName">Rahul Sharma</strong>
+          </div>
+          <div class="row">
+            <span class="text-muted">Form Category</span>
+            <strong id="successFormTitle">Job Application Form</strong>
+          </div>
+          <div class="row">
+            <span class="text-muted">Submission Date &amp; Time</span>
+            <span id="successSubmissionDate">27 Sep 2026, 12:45 PM</span>
+          </div>
+          <div class="row">
+            <span class="text-muted">Status</span>
+            <span class="status-pill status-submitted">Submitted</span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="success-actions">
+          <button class="btn btn-primary" onclick="printApplicationSlip()">
+            <i class="fa-solid fa-print"></i> Download / Print Application
+          </button>
+          <button class="btn btn-secondary" onclick="switchView('user-dashboard-view')">
+            <i class="fa-solid fa-gauge"></i> Go to User Dashboard
+          </button>
+          <button class="btn btn-outline" onclick="switchView('home-view')">
+            <i class="fa-solid fa-house"></i> Back to Home
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       VIEW 4: USER DASHBOARD
+       ========================================== -->
+  <main id="user-dashboard-view" class="page-view dashboard-view">
+    <div class="container">
+      <!-- Dashboard Header -->
+      <div class="dashboard-header">
+        <div class="dashboard-title-group">
+          <h2>Applicant Dashboard</h2>
+          <p>Track your submitted applications, view review updates, and upload missing credentials.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="btn btn-primary btn-sm" onclick="switchView('home-view'); setTimeout(() => document.getElementById('available-forms-section').scrollIntoView({behavior:'smooth'}), 100);">
+            <i class="fa-solid fa-plus"></i> New Application
+          </button>
+        </div>
+      </div>
+
+      <!-- User Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div>
+            <div class="metric-number" id="userMetricTotal">0</div>
+            <div class="metric-label">Total Applications</div>
+          </div>
+          <div class="metric-icon-box" style="background:#eff6ff; color:#2563eb;">
+            <i class="fa-regular fa-folder-open"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-number" id="userMetricReview">0</div>
+            <div class="metric-label">Under Review</div>
+          </div>
+          <div class="metric-icon-box" style="background:#fffbeb; color:#f59e0b;">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-number" id="userMetricApproved">0</div>
+            <div class="metric-label">Approved</div>
+          </div>
+          <div class="metric-icon-box" style="background:#ecfdf5; color:#10b981;">
+            <i class="fa-regular fa-circle-check"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-number" id="userMetricRejected">0</div>
+            <div class="metric-label">Action Required / Rejected</div>
+          </div>
+          <div class="metric-icon-box" style="background:#fef2f2; color:#ef4444;">
+            <i class="fa-regular fa-circle-xmark"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Tabs -->
+      <div class="dashboard-tabs">
+        <button class="dash-tab-btn active" data-tab-target="userTabApplications">
+          <i class="fa-solid fa-list-check"></i> My Applications
+        </button>
+        <button class="dash-tab-btn" data-tab-target="userTabMissingDocs">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Upload Missing Documents
+        </button>
+        <button class="dash-tab-btn" data-tab-target="userTabProfile">
+          <i class="fa-regular fa-id-card"></i> Profile &amp; Preferences
+        </button>
+      </div>
+
+      <!-- Tab 1: Applications Table -->
+      <div class="dash-tab-content" id="userTabApplications">
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Application ID</th>
+                  <th>Form Category</th>
+                  <th>Submission Date</th>
+                  <th>Status</th>
+                  <th>Portal Remarks</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userApplicationsTableBody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Upload Missing Documents -->
+      <div class="dash-tab-content hidden" id="userTabMissingDocs">
+        <div style="background:#ffffff; border:1px solid var(--border-color); border-radius: var(--radius-md); padding: 2rem; max-width: 680px;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--secondary);">Upload Additional or Missing Documents</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.75rem;">
+            If your application status is marked as "Under Review" or an officer requested supplementary proof, attach it here.
+          </p>
+
+          <form onsubmit="submitMissingDocument(event)">
+            <div class="form-group">
+              <label for="missingDocAppSelect">Select Submitted Application <span class="required">*</span></label>
+              <select id="missingDocAppSelect" required>
+                <!-- Populated via JS -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="missingDocType">Document Type <span class="required">*</span></label>
+              <select id="missingDocType" required>
+                <option value="Income Certificate">Income Certificate (Updated)</option>
+                <option value="Caste Validity Certificate">Caste Validity Certificate</option>
+                <option value="Marksheet Clarification">Original / Revised Marksheet</option>
+                <option value="Domicile / Address Proof">Domicile / Residence Proof</option>
+                <option value="Other Clearance">Other Clearance Letter</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="missingDocFileInput">Choose Document File <span class="required">*</span></label>
+              <input type="file" id="missingDocFileInput" accept=".pdf,image/jpeg,image/png" required>
+              <div class="form-hint">Accepted formats: PDF, JPG, PNG (Max 5MB)</div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-upload"></i> Upload &amp; Update Application
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab 3: Profile & Preferences -->
+      <div class="dash-tab-content hidden" id="userTabProfile">
+        <div style="background:#ffffff; border:1px solid var(--border-color); border-radius: var(--radius-md); padding: 2rem; max-width: 680px;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--secondary);">Applicant Profile</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.75rem;">
+            Keep your default profile information up-to-date for auto-filling future forms.
+          </p>
+
+          <form onsubmit="updateUserProfile(event)">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="profileName">Full Name</label>
+                <input type="text" id="profileName" value="Rahul Sharma" required>
+              </div>
+
+              <div class="form-group">
+                <label for="profileEmail">Email Address</label>
+                <input type="email" id="profileEmail" value="rahul.sharma@example.com" readonly>
+                <div class="form-hint">Email cannot be changed (primary login key)</div>
+              </div>
+
+              <div class="form-group">
+                <label for="profilePhone">Mobile Number</label>
+                <input type="tel" id="profilePhone" value="9876543210" maxlength="10">
+              </div>
+
+              <div class="form-group">
+                <label for="profileAddress">Default City</label>
+                <input type="text" id="profileAddress" value="Bengaluru, Karnataka">
+              </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-regular fa-floppy-disk"></i> Update Profile
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       VIEW 5: ADMIN DASHBOARD
+       ========================================== -->
+  <main id="admin-dashboard-view" class="page-view dashboard-view">
+    <div class="container">
+      <div class="dashboard-header">
+        <div class="dashboard-title-group">
+          <h2>Administrator Portal</h2>
+          <p>Review, verify, filter, and process all portal form submissions in real-time.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="btn btn-success btn-sm" onclick="exportApplicationsCSV()">
+            <i class="fa-solid fa-file-excel"></i> Export Application Data (CSV)
+          </button>
+        </div>
+      </div>
+
+      <!-- Admin Overview Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div>
+            <div class="metric-number" id="adminMetricTotal">0</div>
+            <div class="metric-label">Total Submissions</div>
+          </div>
+          <div class="metric-icon-box" style="background:#eff6ff; color:#2563eb;">
+            <i class="fa-solid fa-inbox"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-number" id="adminMetricReview">0</div>
+            <div class="metric-label">Pending / Under Review</div>
+          </div>
+          <div class="metric-icon-box" style="background:#fffbeb; color:#f59e0b;">
+            <i class="fa-solid fa-hourglass-half"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-number" id="adminMetricApproved">0</div>
+            <div class="metric-label">Approved</div>
+          </div>
+          <div class="metric-icon-box" style="background:#ecfdf5; color:#10b981;">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div>
+            <div class="metric-number" id="adminMetricRejected">0</div>
+            <div class="metric-label">Rejected</div>
+          </div>
+          <div class="metric-icon-box" style="background:#fef2f2; color:#ef4444;">
+            <i class="fa-solid fa-circle-xmark"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search & Filtering Toolbar -->
+      <div class="filter-toolbar">
+        <div class="search-input-group">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="adminSearchInput" placeholder="Search by name, application ID, phone, or email...">
+        </div>
+
+        <select class="filter-select" id="adminStatusFilter">
+          <option value="ALL">All Statuses</option>
+          <option value="Submitted">Submitted</option>
+          <option value="Under Review">Under Review</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Draft">Draft</option>
+        </select>
+
+        <select class="filter-select" id="adminFormFilter">
+          <option value="ALL">All Form Types</option>
+          <option value="job">Job Application Form</option>
+          <option value="student">Student Registration</option>
+          <option value="college">College Admission</option>
+          <option value="scholarship">Scholarship Form</option>
+          <option value="govt">Government Scheme</option>
+          <option value="exam">Exam Registration</option>
+          <option value="general">General Application</option>
+        </select>
+
+        <button type="button" class="btn btn-secondary btn-sm" id="resetAdminFiltersBtn">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+      </div>
+
+      <!-- Applications Management Table -->
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>App ID</th>
+                <th>Applicant</th>
+                <th>Form Category</th>
+                <th>Date</th>
+                <th>Status (Change Live)</th>
+                <th>Quick Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminApplicationsTableBody">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       MODALS & DIALOGS
+       ========================================== -->
+
+  <!-- 1. Authentication Modal (Login / Sign Up / Forgot Password) -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="authModalTitle">Portal Access</h3>
+        <button class="modal-close-btn" onclick="closeModal('authModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" id="tabBtn-login" onclick="switchAuthTab('login')">Login</button>
+          <button class="auth-tab-btn" id="tabBtn-signup" onclick="switchAuthTab('signup')">Sign Up</button>
+          <button class="auth-tab-btn" id="tabBtn-forgot" onclick="switchAuthTab('forgot')">Forgot Password</button>
+        </div>
+
+        <!-- Login Pane -->
+        <div class="auth-tab-pane" id="authPane-login">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginEmail">Email Address</label>
+              <input type="email" id="loginEmail" placeholder="e.g. rahul.sharma@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+              <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; cursor: pointer;">
+                <input type="checkbox" checked> Remember me
+              </label>
+              <a href="#" style="font-size: 0.85rem; color: var(--primary);" onclick="switchAuthTab('forgot')">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Login to Portal
+            </button>
+          </form>
+
+          <!-- Quick Demo Logins -->
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); text-align: center;">
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">1-Click Quick Demo Login:</p>
+            <div class="flex justify-center gap-2">
+              <button type="button" class="btn btn-secondary btn-sm" id="quickApplicantLoginBtn">
+                <i class="fa-regular fa-user"></i> Applicant Demo
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" id="quickAdminLoginBtn">
+                <i class="fa-solid fa-user-shield"></i> Admin Demo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sign Up Pane -->
+        <div class="auth-tab-pane hidden" id="authPane-signup">
+          <form id="signupForm">
+            <div class="form-group">
+              <label for="signupName">Full Name <span class="required">*</span></label>
+              <input type="text" id="signupName" placeholder="e.g. Amit Kumar" required>
+            </div>
+            <div class="form-group">
+              <label for="signupEmail">Email Address <span class="required">*</span></label>
+              <input type="email" id="signupEmail" placeholder="e.g. amit.kumar@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="signupMobile">Mobile Number <span class="required">*</span></label>
+              <input type="tel" id="signupMobile" placeholder="10-digit mobile number" maxlength="10" required>
+            </div>
+            <div class="form-group">
+              <label for="signupPassword">Password <span class="required">*</span></label>
+              <input type="password" id="signupPassword" placeholder="Minimum 6 characters" minlength="6" required>
+            </div>
+            <div class="form-group">
+              <label for="signupConfirmPassword">Confirm Password <span class="required">*</span></label>
+              <input type="password" id="signupConfirmPassword" placeholder="Re-enter password" minlength="6" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <i class="fa-solid fa-user-plus"></i> Create EasyForm Account
+            </button>
+          </form>
+        </div>
+
+        <!-- Forgot Password Pane -->
+        <div class="auth-tab-pane hidden" id="authPane-forgot">
+          <form id="forgotPasswordForm">
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+              Enter your registered email address below. We'll send a secure password reset link to your inbox.
+            </p>
+            <div class="form-group">
+              <label for="forgotEmail">Registered Email</label>
+              <input type="email" id="forgotEmail" placeholder="e.g. rahul.sharma@example.com" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <i class="fa-regular fa-paper-plane"></i> Send Password Reset Link
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Printable Application Receipt Modal -->
+  <div class="modal-overlay" id="printModal">
+    <div class="modal-dialog" style="max-width: 840px;">
+      <div class="modal-header">
+        <h3>Official Application Acknowledgement Slip</h3>
+        <button class="modal-close-btn" onclick="closeModal('printModal')">&times;</button>
+      </div>
+      <div class="modal-body printable-slip-wrapper">
+        <div id="printableSlipContent" class="printable-slip">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+      <div class="modal-footer no-print">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('printModal')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="triggerSystemPrint()">
+          <i class="fa-solid fa-print"></i> Print / Save as PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. View Application Details Modal -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-dialog" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3>Application Record Details</h3>
+        <button class="modal-close-btn" onclick="closeModal('detailsModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="detailsModalContent">
+        <!-- Populated via JS -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('detailsModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteConfirmModal">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> Confirm Deletion</h3>
+        <button class="modal-close-btn" onclick="closeModal('deleteConfirmModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.95rem; color: var(--text-main);">
+          Are you sure you want to permanently delete application <strong id="deleteAppRefText">EF-2026-XXXXX</strong>?
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem;">
+          This action cannot be undone. All applicant data and uploaded documents will be removed.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('deleteConfirmModal')">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="executeDeleteApp()">
+          <i class="fa-regular fa-trash-can"></i> Yes, Delete Application
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Upload Missing Document Modal (Shortcut from Table) -->
+  <div class="modal-overlay" id="missingDocModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Upload Additional Documents</h3>
+        <button class="modal-close-btn" onclick="closeModal('missingDocModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="submitMissingDocument(event)">
+          <div class="form-group">
+            <label>Selected Application</label>
+            <input type="text" id="shortcutDocAppId" readonly style="background:#f1f5f9;">
+          </div>
+          <div class="form-group">
+            <label for="shortcutDocType">Document Type</label>
+            <select id="shortcutDocType">
+              <option value="Marksheet Clarification">Marksheet Clarification</option>
+              <option value="Income Certificate">Income Certificate</option>
+              <option value="Caste Validity Certificate">Caste Validity Certificate</option>
+              <option value="ID Proof Clarification">ID Proof (Clearer Scan)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="shortcutDocFile">Select File</label>
+            <input type="file" id="shortcutDocFile" required>
+          </div>
+          <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('missingDocModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Upload Document</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Generic Policy & About Modal -->
+  <div class="modal-overlay" id="infoModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="infoModalTitle">Portal Information</h3>
+        <button class="modal-close-btn" onclick="closeModal('infoModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="infoModalBody" style="line-height: 1.7; font-size: 0.92rem;">
+        <!-- Filled via JS triggers -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="closeModal('infoModal')">Understood</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <h3 style="font-weight: 700; margin-bottom: 0.35rem;">Submitting Your Application</h3>
+    <p id="loadingText" style="color: #cbd5e1; font-size: 0.9rem;">Verifying information and encrypting documents...</p>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ==========================================
+       FOOTER SECTION
+       ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Info -->
+        <div class="footer-brand">
+          <h3>
+            <div class="logo-icon" style="width: 32px; height: 32px; font-size: 1rem;">
+              <i class="fa-solid fa-file-signature"></i>
+            </div>
+            EasyForm
+          </h3>
+          <p>
+            The premier online form filling and verification portal. Designed for rapid submissions, certified data protection, and transparent workflow tracking.
+          </p>
+          <div class="footer-socials">
+            <a href="#" class="social-icon-btn" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" class="social-icon-btn" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon-btn" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="social-icon-btn" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h4>Portal Links</h4>
+          <ul class="footer-links">
+            <li><a onclick="switchView('home-view')">Home</a></li>
+            <li><a onclick="switchView('home-view'); document.getElementById('available-forms-section').scrollIntoView({behavior:'smooth'});">Available Forms</a></li>
+            <li><a onclick="switchView('home-view'); document.getElementById('how-it-works-section').scrollIntoView({behavior:'smooth'});">How It Works</a></li>
+            <li><a onclick="switchView('user-dashboard-view')">Applicant Dashboard</a></li>
+            <li><a onclick="switchView('admin-dashboard-view')">Administrator Panel</a></li>
+          </ul>
+        </div>
+
+        <!-- Form Categories -->
+        <div class="footer-col">
+          <h4>Form Categories</h4>
+          <ul class="footer-links">
+            <li><a onclick="startFillingForm('job')">Job Application Form</a></li>
+            <li><a onclick="startFillingForm('student')">Student Registration</a></li>
+            <li><a onclick="startFillingForm('college')">College Admission</a></li>
+            <li><a onclick="startFillingForm('scholarship')">Scholarship Application</a></li>
+            <li><a onclick="startFillingForm('govt')">Government Schemes</a></li>
+          </ul>
+        </div>
+
+        <!-- Support & Policies -->
+        <div class="footer-col">
+          <h4>Help &amp; Legal</h4>
+          <ul class="footer-links">
+            <li><a onclick="showInfoModal('About Us', 'EasyForm is an authorized digital platform built to streamline civic, educational, and corporate form processing. Our mission is to eliminate cumbersome paperwork through secure cloud validation.')">About Us</a></li>
+            <li><a onclick="showInfoModal('Contact Us', 'Support Hotline: 1800-111-2233<br>Email: helpdesk@easyform.portal<br>Hours: Monday to Saturday, 9:00 AM - 6:00 PM IST')">Contact Us</a></li>
+            <li><a onclick="showInfoModal('Privacy Policy', 'We adhere strictly to ISO 27001 data governance and encryption standards. Your personal identifiers, contact numbers, and academic certificates are encrypted in transit and at rest and are never sold or shared with unauthorized third parties.')">Privacy Policy</a></li>
+            <li><a onclick="showInfoModal('Terms & Conditions', 'By submitting applications on EasyForm, applicants certify that all uploaded credentials are authentic. Any falsification of records will lead to disqualification and legal liability under digital governance regulations.')">Terms &amp; Conditions</a></li>
+            <li><a onclick="switchView('home-view'); document.getElementById('faq-section').scrollIntoView({behavior:'smooth'});">FAQ &amp; Help Desk</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 EasyForm – Online Form Filling Portal. All rights reserved.
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+          <a onclick="showInfoModal('Privacy Policy', 'ISO 27001 Certified encryption ensures complete confidential data handling.')">Privacy</a>
+          <a onclick="showInfoModal('Terms & Conditions', 'Standard terms of service apply to all digital application submissions.')">Terms</a>
+          <a onclick="showInfoModal('Security', '256-Bit SSL/TLS Encryption active across all transmission endpoints.')">Security</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Helper for info modal -->
+  <script>
+    function showInfoModal(title, content) {
+      document.getElementById('infoModalTitle').textContent = title;
+      document.getElementById('infoModalBody').innerHTML = content;
+      openModal('infoModal');
+    }
+  </script>
+
+  <!-- Application Logic -->
+  <script src="js/app.js"></script>
+</body>
+</html>
